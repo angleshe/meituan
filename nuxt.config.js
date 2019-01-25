@@ -1,6 +1,5 @@
 const pkg = require('./package')
 
-
 module.exports = {
   mode: 'universal',
 
@@ -28,8 +27,9 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    '@/assets/css/api.scss',
     'element-ui/lib/theme-chalk/index.css',
-    '@/assets/main.css'
+    '@/assets/css/common.scss'
   ],
 
   /*
@@ -43,6 +43,10 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
+    ['nuxt-sass-resources-loader', [
+      '@/assets/css/_util.scss',
+      '@/assets/css/_config.scss'
+    ]]
   ],
 
   /*
@@ -53,7 +57,6 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-
     }
   }
 }

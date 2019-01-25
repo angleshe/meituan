@@ -12,6 +12,7 @@
   font-size: 12px;
   .login {
     margin: 0 10px;
+    color: $mainColor;
   }
   .reg {
     color: #999;

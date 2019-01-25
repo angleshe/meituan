@@ -11,18 +11,17 @@
   display: flex;
   align-items: center;
   font-size: 12px;
-  color: #666;
+  color: $subtextFontColor;
   .choose-btn {
     background: #F4F4F4;
     border: 1px solid #E5E5E5;
     border-radius: 2px;
-    color: #666;
     margin: 0 4px;
     padding: 0 2px;
     text-decoration: none;
   }
   .city-list {
-    color: #999;
+    color: $supTextFontColor;
   }
 }
 </style>

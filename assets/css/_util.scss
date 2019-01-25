@@ -1,0 +1,215 @@
+// 引入配置文件
+@import 'config';
+// 引入数学库
+@import 'math';
+/**
+ * 获取一个单位的值
+ * @param  {number/string} $unit 单位
+ * @return {number}       单位一
+ */
+@function getOneUnit ($unit) {
+	@if $unit == unit(1px) {
+		@return 1px;
+	} @else if $unit == unit(1deg) {
+		@return 1deg;
+	} @else if $unit == unit(1vw) {
+		@return 1vw;
+	} @else if $unit == unit(1vh) {
+		@return 1vh;
+	} @else if $unit == unit(1em) {
+		@return 1em;
+	} @else if $unit == unit(1rem) {
+		@return 1rem;
+	}
+}
+/**
+ * 获取禁用按钮的颜色
+ * @param  {color} $color 没禁用时的颜色
+ * @return {number}       禁用颜色
+ */
+@function disBtnColor ($color) {
+	@return  rgba($color, .3);
+}
+/**
+ * 添加默认单位    为没有单位的数值添加单位
+ * @param  {number} $num 数值
+ * @param  {string} $unit 单位  默认px
+ * @return {number}      带单位的数值
+ */
+@function addUnit ($num, $unit: px) {
+	@return if(unitless($num), $num * getOneUnit($unit), $num);
+}
+/**
+ * 删除单位
+ * @param  {number} $num 要删除单位的值
+ * @return {number}      删除单位的值
+ */
+@function removeUnit ($num) {
+	@return if(unitless($num), $num, $num / getOneUnit(unit($num)));
+}
+/**
+ * 文本垂直居中
+ * @param  {number} $height 高度
+ */
+@mixin textVerCenter ($height) {
+	$height: addUnit($height);
+	height: $height;
+	line-height: $height;
+}
+/**
+ * 文本居中
+ * @param  {number} $height 高度
+ */
+@mixin textCenter($height) {
+	@include textVerCenter($height);
+	text-align: center;
+}
+// 固定高度定位居中
+@mixin positionCenter {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+// 清除子类的float
+@mixin clearfloat {
+	&:after {
+		content: ' ';
+		display: block;
+		clear: both;
+		visibility:hidden;
+		line-height: 0;
+		height:0;
+	}
+}
+/**
+ * 圆形dom
+ * @param  {大小} $size 直径
+ */
+@mixin circular ($size) {
+	$size: addUnit($size);
+	width: $size;
+	height: $size;
+	border-radius: 50%;
+}
+/**
+ * 角dom
+ * @param  {number} $size   角大小
+ * @param  {number/string} $dir:   45deg          角的方向
+ * @param  {number} $angle: 90deg         角的度数
+ * @param  {number} $offsetX: 0px         x轴的偏移量
+ * @param  {number} $offsetX: 0px         y轴偏移量
+ * @param  {color} $color: #000          角的颜色
+ */
+@mixin angle ($size, $dir: 45deg, $angle: 90deg, $offsetX: 0px, $offsetY: 0px, $color: $mainFontColor) {
+	@if type-of($dir) == 'string' {
+		@if $dir == 'top' {
+			$dir: -45deg;
+		} @else if $dir == 'right' {
+			$dir: 45deg;
+		} @else if $dir == 'bottom' {
+			$dir: 135deg;
+		} @else if $dir == 'left' {
+			$dir: 225deg;
+		} @else {
+			$dir: 0deg;
+		}
+	} @else if type-of($dir) == 'number' {
+		$dir: addUnit($dir, 'deg');
+	} @else {
+		$dir: 0deg;
+	}
+	$offsetX: addUnit($offsetX);
+	$offsetY: addUnit($offsetY);
+	$angle: addUnit($angle, 'deg');
+	$offsetAngle: ($angle - 90deg) / 2;
+	$size: addUnit($size) * cos($offsetAngle);
+	width: $size;
+	height: $size;
+	border-top: 1px solid $color;
+	border-right: 1px solid $color;
+	transform: translate($offsetX, $offsetY) rotate($dir) skew($offsetAngle, $offsetAngle);
+}
+/**
+ * xdom
+ * @param  {number} $size   大小
+ * @param  {color} $color: $mainFontColor 颜色
+ * @param  {string} $type: 类型： x/+
+ */
+@mixin intersect ($size, $color: $mainFontColor, $type: 'x') {
+	$size: addUnit($size);
+	&:before,
+  	&:after {
+		content: '';
+		display: block;
+		width: 2px;
+		height: $size;
+		background-color: $color;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+  }
+  @if $type == '+' {
+		&:before {
+	    transform: translate(-50%, -50%);
+	  }
+	  &:after {
+	    transform: translate(-50%, -50%) rotate(90deg);
+	  }
+  } @else {
+	  &:before {
+	    transform: translate(-50%, -50%) rotate(-45deg);
+	  }
+	  &:after {
+	    transform: translate(-50%, -50%) rotate(45deg);
+	  }
+  }
+}
+/**
+ * 勾dom
+ * @param  {number} $size   勾大小
+ * @param  {color} $color: $mainFontColor 勾颜色
+ */
+@mixin hook ($size, $color: $mainFontColor) {
+	$size: addUnit($size);
+	&:after {
+		content: '';
+		display: block;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		height: $size;
+		width: $size / 2;
+		border-right: 1px solid $color;
+		border-bottom: 1px solid $color;
+		box-sizing: border-box;
+		transform: translate(-50%, -60%) rotate(45deg);
+	}
+}
+// 文本换行
+@mixin wrap {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+/**
+ * 省略文本(单行)
+ */
+@mixin textEllipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+// 设置长宽
+@mixin wh ($width, $height: $width) {
+	width: addUnit($width);
+	height: addUnit($height);
+}
+// 设置骨架屏背景颜色
+@mixin skeletonScreenColor {
+	background-color: $initViewColor;
+	background-image: linear-gradient(-45deg, transparent 10%, rgba(#fff, 0.4) 50%, transparent 90%);
+	background-repeat: no-repeat;
+	background-size: 80px 32px;
+	background-position-y: 0;
+	animation: skeleton-stripes 1s linear infinite;
+}

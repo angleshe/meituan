@@ -1,0 +1,21 @@
+html,body {
+	background-color: $backgroundColor;
+	color: $mainFontColor;
+}
+button,
+input,
+textarea {
+	outline: none;
+	border-radius: 0;
+	color: inherit;
+}
+[v-cloak] {
+  display: none !important;
+}
+input::-webkit-input-placeholder{
+  color: $inputPlaceholderFontColor;
+}
+#app {
+	font-size: $mainFontSize;
+	width: 100vw;
+}
